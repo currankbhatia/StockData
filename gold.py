@@ -1,6 +1,9 @@
 import urllib2
 from yahoo_finance import Share
 import numpy
+import csv
+from collections import defaultdict
+
 
 def getYearData(symbol, start, end):
 
@@ -46,7 +49,7 @@ def correlation(dict1, dict2, day_st, day_end):
 def correlationIntervals(dict1, dict2, maxNum, interval):
 
 
-	print ("Running intervals of %d", (interval))
+	#print ("Running intervals of %d", (interval))
 
 	retList = list()
 
@@ -95,34 +98,75 @@ def correlationTests(dict1, dict2):
 	y = correlationIntervals(dict1, dict2, len(dict1), len(dict1))
 	for x in range(0, len(y)):
 		
-		print x
 		retList.append(y[x])
 	
 	return retList
 
 
 
-#def sigData(dict1, dict2):
+def sigData(dict1, dict2):
+	
+		
+
+	data =  correlationTests(dict1, dict2)
+	
+	for j in range(0, len(data)):
+		if (data[j]['corr'] > 0.9):
+			print data[j]	  	
+
+def snp500():
+
+	with open('constituents.csv') as file:
+		read = csv.DictReader(file)
+		
+		sp500List = list()
+		for row in read: 
+			#print ','.join(row)
+			#print row['Symbol']	
+			sp500List.append(row['Symbol'])
+
+
+	return sp500List
+
+def runner():
+
+	
+
+	startTime = "2015-05-05"
+	endTime = "2016-05-05"	
+
+	gold = getYearData('GDX', startTime, endTime)
+
+
+	list500 = snp500()
+
+	for x in range(0, 505):
+
+
+		print list500[x]	
+		stockVar= getYearData(list500[x], startTime, endTime)	
+		sigData(gold, stockVar)
+
+#def 
+	#for loop
+	#take in all stocks in s&p 500
+	#get year data
+	#do sig Data 
 
 
 
 
-startTime = "2015-05-05"
-endTime = "2016-05-05"	
-
-gold = getYearData('GDX', startTime, endTime)
  
-apple = getYearData('^GSPC', startTime, endTime)
+####apple = getYearData('^GSPC', startTime, endTime)
 
 #correlation(gold, apple, 0, len(gold))
 
 #correlationIntervals(gold, apple, len(gold), 20)
 
-print correlationTests(gold, apple)
+####sigData(gold, apple)
+#print correlationTests(gold, apple)
 print "--------------------------------------"
-
 
 #print goldVector
 #print appleVector
-
-
+runner()
