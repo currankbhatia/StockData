@@ -19,19 +19,14 @@ closingPrice = list()
 
 for i in range(0, len(x)):
     tel = {'id': i, 'closing_price': x[i]['Adj_Close'], 'date': x[i]['Date']}
-    #print x[i]['Adj_Close']
     arr.append(tel)
-    closingPrice.append(tel['closing_price'])
-
-
-for j in range(0, len(x)):
-    dict1 = arr[j]
-    print dict1['closing_price']
+    twoList = [tel['date'], tel['closing_price']]
+    closingPrice.append(twoList)
 
 
 
 print closingPrice
-print len(x)
+#print len(x)
 #x1 = np.linspace(0, 365)
 plt.plot(closingPrice) 
 plt.show()
