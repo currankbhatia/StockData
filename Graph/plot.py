@@ -16,17 +16,18 @@ x = yahoo.get_historical(startTime, endTime)
 # arr is a list of dictionaries with historical data
 arr = list()
 closingPrice = list()
+closePrice = list()
 
 for i in range(0, len(x)):
     tel = {'id': i, 'closing_price': x[i]['Adj_Close'], 'date': x[i]['Date']}
     arr.append(tel)
     twoList = [tel['date'], tel['closing_price']]
     closingPrice.append(twoList)
-
+    closePrice.append(tel['closing_price'])
 
 
 print closingPrice
 #print len(x)
 #x1 = np.linspace(0, 365)
-plt.plot(closingPrice) 
+plt.plot(closePrice) 
 plt.show()
