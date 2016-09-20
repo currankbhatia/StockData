@@ -20,6 +20,6 @@ a stock should be bought and what it’s chances are of being successful.
 
 Changes we will have to implement for further robustness:
 
-> Change from Yahoo Finance to a more robust Dataset
-> Build a Web Service to house all data and build a nicer looking tool
+Change from Yahoo Finance to a more robust Dataset.
+Build a Web Service to house all data and build a nicer looking tool.
 
