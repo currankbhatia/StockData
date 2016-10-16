@@ -20,6 +20,39 @@ def print_historical_data(data):
     for i in range(len(data)):
         print '{} and {}'.format(data[i]['Adj_Close'], data[i]['Date'])
 
+#Returns a list of data with Adj_Close and Date
+def data_list(data): 
+    retData = []
+    for i in range(len(data)):
+
+        
+        str1 = data[i]['Date'] 
+
+        yr = int(str1[0:4])
+        month = int(str1[5:7])
+        day = int(str1[8:10])
+        #print '{}, {}. {}'.format(yr, month, day)
+        
+        
+        retData.append([data[i]['Adj_Close'], date(yr, month, day)])
+
+    return retData
+
+#presents data as individual lists and reverses them for readability of data
+def data_lists_reversed(data):
+    dataLs = data_list(data)
+    dataLs.reverse()
+    priceLs = [x[0] for x in dataLs] #list comprehension
+    datesLs = [x[1] for x in dataLs]
+    return [dataLs, priceLs, datesLs]
+
+def plot_data_xy(x, y):
+
+    plt.figure()
+    plt.plot_date(x, y, '-')
+    plt.gcf().autofmt_xdate(rotation=45)
+    plt.show()
+
 
 def plot_data(data):
 
@@ -36,17 +69,16 @@ def plot_data(data):
         dateList.append(date(yr, month, day))
     #print adjList
     #print dateList
-
+    plt.figure()
     plt.plot_date(dateList, adjList, '-')
     plt.gcf().autofmt_xdate(rotation=45)
     plt.show()
 
+#------ Start of script ---------
+#startTime = "2005-01-01"
+#endTime = "2005-10-10" 
 
-startTime = "2005-01-01"
-endTime = "2005-10-10" 
+#data = get_historical_data(startTime, endTime, '^GSPC')
 
-data = get_historical_data(startTime, endTime, '^GSPC')
+#print "---"
 
-print "---"
-
-plot_data(data)
