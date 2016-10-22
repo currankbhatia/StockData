@@ -1,6 +1,6 @@
 import urllib2
 from yahoo_finance import Share
-import numpy
+import numpy as np
 import csv
 from collections import defaultdict
 import time
@@ -19,6 +19,18 @@ def get_historical_data(startTime, endTime, shareName):
 def print_historical_data(data):
     for i in range(len(data)):
         print '{} and {}'.format(data[i]['Adj_Close'], data[i]['Date'])
+
+def print_list(list1):
+    for i in range(len(list1)):
+        print list1[i]
+
+#prints  a number of lists at the same time
+def print_lists(lists):
+   
+    arr = np.array(lists)
+    array = np.transpose(arr)
+    for i in range(len(array)):
+        print array[i]
 
 #Returns a list of data with Adj_Close and Date
 def data_list(data): 

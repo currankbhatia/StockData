@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 
 import numpy as np
-from sp500 import get_historical_data, print_historical_data, plot_data, data_list, plot_data_xy
-from sp500 import data_lists_reversed
+from data_helper import get_historical_data, print_historical_data, plot_data, data_list, plot_data_xy
+from data_helper import data_lists_reversed, print_list, print_lists
 
 
 def aroon_up_oneday(list25):
@@ -38,7 +38,6 @@ def make_aroon_list(data):
 
 def plot_aroon(data):
 
-
     aroonList = make_aroon_list(data)
 
     dataRev = data_lists_reversed(data)
@@ -55,10 +54,21 @@ def plot_aroon(data):
     plt.gcf().autofmt_xdate(rotation=45)
     plt.show()
 
-startTime = "2005-01-01"
-endTime = "2006-01-01" 
+startTime = "2015-01-01"
+endTime = "2016-01-01" 
 
-data = get_historical_data(startTime, endTime, 'AAPL')
+data = get_historical_data(startTime, endTime, 'TSLA')
+
+
+dataLists = data_lists_reversed(data)
+dataLs = dataLists[0]
+priceLs = dataLists[1]
+datesLs = dataLists[2] 
+
+aroon = make_aroon_list(data)[0]
+
+print_lists([priceLs, aroon, datesLs ])
+
 
 plot_aroon(data)
 
