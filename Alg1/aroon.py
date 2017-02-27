@@ -102,7 +102,7 @@ def checkCompanyPositive(startTime, endTime, company, numAbove):
     
     aroon_data = make_aroon_list(data)
     
-    isTrending( numAbove, aroon_data, company)
+    return isTrending( numAbove, aroon_data, company)
 
 
 def checkSP500Positive(startTime, endTime, numAbove):
@@ -110,24 +110,47 @@ def checkSP500Positive(startTime, endTime, numAbove):
     with open('../Summer/constituents.csv') as file:
         read = csv.DictReader(file)
         sp500List = list()
-        
+        trendList = list()
+
         for row in read: 
             #print ','.join(row)
             #print row['Symbol']
             sp500List.append(row['Symbol'])
             #print type(row['Symbol'])
         
-
+        #i = 0
         for x in sp500List:
-            checkCompanyPositive(startTime, endTime, x, numAbove)
+            #i = i + 1
+            #if (i == 5):
+            #    break;
+            twoList = []
+            twoList.append(x)
+            y = checkCompanyPositive(startTime, endTime, x, numAbove)
+            twoList.append(y)
+            trendList.append(twoList)
 
 
-#checkSP500Positive("2016-01-01", "2017-02-09",65)
-#checkCompanyPositive("2016-01-01", "2017-02-09", "TSLA", 65)
+    return trendList
+
+def sp500CSV(startTime, endTime, numAbove):
+    with open('sp500aroontrends.csv', 'wb') as csvfile:
+        mywriter = csv.writer(csvfile, delimiter=' ',quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        
+        str1 = "StartTime:{},EndTime:{},numAbove:{}".format(startTime, endTime, numAbove)
+        mywriter.writerow(str1)
+        mywriter.writerow("Company,ifTrending")
+        
+        printList = checkSP500Positive(startTime, endTime, numAbove)
+        for x in printList:
+            mywriter.writerow("{},{}".format(x[0], x[1]))
+
+sp500CSV("2016-01-01", "2017-02-26",65)
+#checkSP500Positive("2016-01-01", "2017-02-26",65)
+#checkCompanyPositive("2016-01-01", "2017-02-26", "TSLA", 65)
 
 
 
-plot_company("2016-01-01", "2017-02-09", "TSLA")
+#plot_company("2016-01-01", "2017-02-26", "TSLA")
 #plot_company("2015-01-01", "2016-01-01", 'TSLA')
 
 
