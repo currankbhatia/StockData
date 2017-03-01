@@ -63,8 +63,9 @@ def plot_company(startTime, endTime, company):
     
     aroon_data = make_aroon_list(data)
     
+    #print len(aroon_data)
+    #print len(aroon_data[0])
     #print aroon_data 
-    
     plot_aroon(data)
 
     return aroon_data;
@@ -77,17 +78,18 @@ def isTrending(numAbove, aroon_data, company):
         Checks if in reached above the numAbove in 6 out of the last 10 days
    
     """
-    daysPositive = 10
+    days = 10
+    daysPositive = 6
 
     up_data = aroon_data[0]
     count = 0
-    #for i in range(len(aroon_data)-1, len(aroon_data)-daysPositive, -1):
-    for i in range(len(up_data)-1, len(up_data)-daysPositive-1, -1):
+    
+    for i in range(len(up_data)-1, len(up_data)-days-1, -1):
         #print up_data[i]
         if up_data[i] >= numAbove:
            count = count + 1
             
-    if count < 6: 
+    if count < daysPositive: 
         print company + " : Not trending"
         return False
         
@@ -104,6 +106,50 @@ def checkCompanyPositive(startTime, endTime, company, numAbove):
     
     return isTrending( numAbove, aroon_data, company)
 
+def crossoverPositive(daysLast, aroon_data, company):
+
+    #check if data is large enough for daysLast
+    if len(aroon_data[0]) < daysLast:
+        print "Error for crossover Positive"
+        return False
+    
+    len1 = len(aroon_data[0])
+
+    bool1 = True
+    #if aroon down is higher than aroon up then bool1 is false
+    if (aroon_data[0][len1-daysLast-1] < aroon_data[1][len1-daysLast-1]):
+        bool1 = False
+
+    for i in range( len1-1, len1-daysLast-1, -1):
+        #if bool1 is false, and aroon up is greater than aroon down, then it switched and we
+        # have crossover
+        if ((not bool1) and (aroon_data[0][i] > aroon_data[1][i])):
+            return True
+
+
+
+    return False
+        
+
+
+
+def checkCrossoverPositive(startTime, endTime, company, numAbove):
+
+    """
+        Checks if has met crossover mark and has stock heading in uptrend
+        daysLast: Checks for last 20 days for the crossover mark, if it exists
+    """
+
+    print company + " is the company"
+    data = get_historical_data(startTime, endTime, company)
+    
+    aroon_data = make_aroon_list(data)
+    daysLast = 20
+    boolCross = crossoverPositive(daysLast, aroon_data,company)
+    if boolCross:
+        print company + " has had a crossover"
+    else:
+        print company + " did not have a crossover"
 
 def checkSP500Positive(startTime, endTime, numAbove):
 
@@ -144,13 +190,14 @@ def sp500CSV(startTime, endTime, numAbove):
         for x in printList:
             mywriter.writerow("{},{}".format(x[0], x[1]))
 
-sp500CSV("2016-01-01", "2017-02-26",65)
+#sp500CSV("2016-01-01", "2017-02-26",65)
 #checkSP500Positive("2016-01-01", "2017-02-26",65)
-#checkCompanyPositive("2016-01-01", "2017-02-26", "TSLA", 65)
+#checkCompanyPositive("2016-01-01", "2017-02-26", "YHOO", 65)
 
 
+checkCrossoverPositive("2016-01-01", "2017-01-27", "YHOO", 65)
+plot_company("2016-01-01", "2017-01-27", "YHOO")
 
-#plot_company("2016-01-01", "2017-02-26", "TSLA")
 #plot_company("2015-01-01", "2016-01-01", 'TSLA')
 
 
