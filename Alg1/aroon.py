@@ -214,6 +214,8 @@ def checkSP500Positive(startTime, endTime, numAbove):
         sp500List = list()
         trendList = list()
 
+
+
         for row in read: 
             #print ','.join(row)
             #print row['Symbol']
@@ -256,9 +258,10 @@ def sp500CSV(startTime, endTime, numAbove):
         mywriter = csv.writer(csvfile, delimiter=' ',quotechar='|', quoting=csv.QUOTE_MINIMAL)
         
         str1 = "StartTime:{},EndTime:{},numAbove:{}".format(startTime, endTime, numAbove)
-        mywriter.writerow([str1])
+
         mywriter.writerow(["Company,ifTrending,CrossoverPositive,CrossoverNegative"])
         
+        mywriter.writerow([str1])
 
         for x in printList:
             mywriter.writerow(["{},{},{},{}".format(x[0], x[1],x[2],x[3])])
@@ -270,9 +273,10 @@ def sp500CSVCare(startTime, endTime, numAbove):
         mywriter = csv.writer(csvfile, delimiter=' ',quotechar='|', quoting=csv.QUOTE_MINIMAL)
         
         str1 = "StartTime:{},EndTime:{},numAbove:{}".format(startTime, endTime, numAbove)
-        mywriter.writerow([str1])
+
         mywriter.writerow(["Company,ifTrending,CrossoverPositive,CrossoverNegative"])
         
+        mywriter.writerow([str1])
 
 
         with open('../Summer/constituents.csv') as file:
@@ -312,8 +316,24 @@ def sp500CSVCare(startTime, endTime, numAbove):
                 # remember x is company, y is isTrending
                 mywriter.writerow(["{},{},{},{}".format(x, y, crossPos,crossNeg)])
 
-sp500CSVCare("2016-01-01", "2017-03-01",65)
 
+
+def readOwnCSV():
+    with open('sp500aroontrendscare.csv') as file2:
+        read2 = csv.DictReader(file2)
+
+        #i = 0
+        list1 = []
+        for row in read2: 
+            #print row
+            if row['ifTrending'] == 'True' and row['CrossoverPositive'] == 'True':
+                #print row['Company'] 
+                list1.append(row['Company'])
+
+    return list1
+
+#sp500CSVCare("2016-03-27", "2017-03-27",65)
+#readOwnCSV()
 
 #checkSP500Positive("2016-01-01", "2017-02-26",65)
 #checkCompanyPositive("2016-01-01", "2017-02-26", "ABT", 65)
@@ -324,7 +344,7 @@ sp500CSVCare("2016-01-01", "2017-03-01",65)
 #checkCrossoverPositive("2016-01-01", "2016-11-01", "YHOO", 65)
 #plot_company("2016-01-01", "2016-11-01", "YHOO")
 
-#plot_company("2016-03-02", "2017-03-02", 'CSCO')
+#plot_company("2016-03-27", "2017-03-27", 'GOOGL')
 
 
 #startTime = "2015-01-01"
