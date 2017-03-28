@@ -11,15 +11,27 @@ from datetime import datetime, timedelta
 
 
 
+def addDays(dateStr, daysR):
 
-def fiveDayGain(stocks, endDate):
+    start = datetime.strptime(dateStr, "%Y-%m-%d")
+    newDate = start + timedelta(days=daysR)
+    newDateStr = str(newDate.date())
+    return newDateStr
+
+
+def gain(stockName, endDate, days):
+
+    ret = dh.get_historical_data(endDate, addDays(endDate, days), stockName)
+    prices = ret[1]
+    return round(prices[len(prices)-1] - prices[0], 3)
+    
+
+def dayGains(stocks, endDate, days):
 
     effective = 0
     for x in stocks:
-        ret = dh.get_historical_data(endDate, subtractDays(endDate, -5), x)
-        prices = ret[1]
-        diff = prices[len(prices)-1] - prices[0]
-
+        diff = gain(x, endDate, days)
+    
         print "{}: {}".format(x, diff)
         if diff > 0:
             effective = effective + 1
@@ -27,13 +39,63 @@ def fiveDayGain(stocks, endDate):
     succRate = float(effective)/len(stocks)
     print "The success rate is : " + str(succRate)
 
-def subtractDays(dateStr, daysR):
 
-    start = datetime.strptime(dateStr, "%Y-%m-%d")
-    newDate = start - timedelta(days=daysR)
-    newDateStr = str(newDate.date())
-    return newDateStr
+def multDaysTests(stocks, endDate):
 
-#an.sp500CSVCare("2016-03-22", "2017-03-22",65)
+    lsTop = ["Company", 5,10,20,30,60,90,120,180,240,300,360]
+    lsStockGains = []
+    for x in stocks:
+        ls = []
+        ls.append(x)
+        ls.append(gain(x, endDate,5))
+        ls.append(gain(x, endDate,10))
+        ls.append(gain(x, endDate,20))
+        ls.append(gain(x, endDate,30))
+        ls.append(gain(x, endDate,60))
+        ls.append(gain(x, endDate,90))
+        ls.append(gain(x, endDate,120))
+        ls.append(gain(x, endDate,180))
+        ls.append(gain(x, endDate,240))
+        ls.append(gain(x, endDate,300))
+        ls.append(gain(x, endDate,360))
+
+        lsStockGains.append(ls)
+
+    with open('csv-files/multDayTests.csv', 'wb') as csvfile:
+        mywriter = csv.writer(csvfile, delimiter=' ',quotechar='|', quoting=csv.QUOTE_MINIMAL)
+
+        lsTopStr = ",".join(str(x) for x in lsTop)
+        print lsTopStr
+        mywriter.writerow([lsTopStr])
+        str1 = "Date:{}".format(endDate)
+        mywriter.writerow([str1])
+
+        for ls in lsStockGains:
+        	xStr = ",".join(str(x) for x in ls)
+        	mywriter.writerow([xStr])
+
+
+       	lsSuccessRate = ["Success Rate"]
+       	len1 = len(lsStockGains[0])
+       	#print len1 #should be 2 for the test
+
+       	for i in range(1, len1):
+       		effective = 0
+       		for s in lsStockGains:
+       			if (s[i] > 0):
+       				effective = effective + 1
+
+
+       		succRate = float(effective)/len(lsStockGains)
+       		lsSuccessRate.append(succRate)
+
+       	succStr = ",".join(str(x) for x in lsSuccessRate)
+        mywriter.writerow([succStr])
+
+
+#an.sp500CSVCare("2015-01-22", "2016-01-22",65)
 stocks =  an.readOwnCSV()
-fiveDayGain(stocks, "2017-03-22")
+#stocks = ["GOOGL", "CSCO"]
+#dayGains(stocks, "2017-03-22", 5)
+multDaysTests(stocks, "2016-01-22")
+
