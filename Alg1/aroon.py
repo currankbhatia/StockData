@@ -295,26 +295,30 @@ def sp500CSVCare(startTime, endTime, numAbove):
                 #i = i + 1
                 #if (i == 5):
                     #break;
-                print "Company: {}".format(x)
-                twoList = []
-                twoList.append(x)
-                #y = checkCompanyPositive(startTime, endTime, x, numAbove)
                 data = get_historical_data(startTime, endTime, x) 
-                aroon_data = make_aroon_list(data)
-                
-                y = isTrending( numAbove, aroon_data, x)
-                daysLast = 20
-                crossPos = crossoverPositive(daysLast, aroon_data,x) 
-                crossNeg = crossoverNegative(daysLast, aroon_data,x)
-                twoList.append(y)
-                #crossPos = checkCrossoverPositive(startTime, endTime, x, numAbove)
-                #crossNeg = checkCrossoverNegative(startTime, endTime, x, numAbove)
-                twoList.append(crossPos)
-                twoList.append(crossNeg)
-                trendList.append(twoList)
-                print "Trending: {}, CrossPos: {}, CrossNeg: {}".format(y, crossPos, crossNeg)
-                # remember x is company, y is isTrending
-                mywriter.writerow(["{},{},{},{}".format(x, y, crossPos,crossNeg)])
+                if (data == False):
+                    print "do nothing"
+                else:
+                    print "Company: {}".format(x)
+                    twoList = []
+                    twoList.append(x)
+                    #y = checkCompanyPositive(startTime, endTime, x, numAbove)
+                    
+                    aroon_data = make_aroon_list(data)
+                    
+                    y = isTrending( numAbove, aroon_data, x)
+                    daysLast = 20
+                    crossPos = crossoverPositive(daysLast, aroon_data,x) 
+                    crossNeg = crossoverNegative(daysLast, aroon_data,x)
+                    twoList.append(y)
+                    #crossPos = checkCrossoverPositive(startTime, endTime, x, numAbove)
+                    #crossNeg = checkCrossoverNegative(startTime, endTime, x, numAbove)
+                    twoList.append(crossPos)
+                    twoList.append(crossNeg)
+                    trendList.append(twoList)
+                    print "Trending: {}, CrossPos: {}, CrossNeg: {}".format(y, crossPos, crossNeg)
+                    # remember x is company, y is isTrending
+                    mywriter.writerow(["{},{},{},{}".format(x, y, crossPos,crossNeg)])
 
 
 

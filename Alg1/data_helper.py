@@ -24,7 +24,14 @@ def date_translator(str_date):
 #used to be called get_google_data
 def get_historical_data(startTime, endTime, shareName):
 
-    x = web.DataReader(shareName, "yahoo", date_translator(startTime),date_translator(endTime))
+    try:
+        x = web.DataReader(shareName, "yahoo", date_translator(startTime),date_translator(endTime))
+    except:
+        print "Passed one, that did not have data"
+        return False
+
+
+    #print x
 
 
     dates1 = x.index.tolist()
