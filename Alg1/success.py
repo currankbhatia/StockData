@@ -3,7 +3,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import csv
-
+import pandas as pd
 import data_helper as dh
 import aroon as an
 
@@ -119,14 +119,52 @@ def multDaysTests(stocks, endDate):
         mywriter.writerow([percGrStr])
 
 
+def multDaysTestsDataFrames(stocks, endDate):
+    
+    
+    lsTop = ["Company", 5,10,20,30,60,90,120,180,240,300,360]
+    lsStockGains = []
+    lsStockGainsPerc = []
+    for x in stocks:
+        ls = []
+        ls.append(x)
+        ls2 = []
+        ls2.append(x)
 
+        for j in range(1,len(lsTop)):
 
+        	ga = gain(x, endDate, lsTop[j])
+        	ls.append(ga[0])
+        	ls2.append(ga[1])
 
-an.sp500CSVCare("2014-01-22", "2015-01-22",65)
-stocks =  an.readOwnCSV()
-#stocks = ["GOOGL", "CSCO"]
+        lsStockGains.append(ls)
+        lsStockGainsPerc.append(ls2)
+
+    
+    df = pd.DataFrame(lsStockGains, columns =lsTop)
+    dfPerc = pd.DataFrame(lsStockGainsPerc, columns =lsTop)
+    
+    #num = df[20][0] + df[20][1]
+    lsAvg = ['Avg Succ']
+    lsAvgPerc = ['Avg Perc Growth']
+    for x in lsTop[1:]:
+        lsAvg.append(round(df[x].mean(),3))
+        lsAvgPerc.append(round(dfPerc[x].mean(),3))
+    
+    df2 = pd.DataFrame([lsAvg], columns =lsTop)
+    df2AvgPerc = pd.DataFrame([lsAvgPerc], columns=lsTop)
+    
+    df = df.append(df2, ignore_index=True)
+    dfPerc = dfPerc.append(df2AvgPerc, ignore_index=True)
+
+    print df
+    print dfPerc
+
+#an.sp500CSVCare("2014-01-22", "2015-01-22",65)
+#stocks =  an.readOwnCSV()
+stocks = ["AYI", "ANTM"]
 #dayGains(stocks, "2017-03-22", 5)
-multDaysTests(stocks, "2015-01-22")
+multDaysTestsDataFrames(stocks, "2015-01-22")
 
 #dh.get_historical_data("2014-01-22", "2014-01-30", 'KHC')
 
